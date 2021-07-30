@@ -25,6 +25,7 @@ func main() {
 	runner, _ := reader.ReadString('\n')
 
 	// Setup API server connection
+	started := false
 	fmt.Print("Enter API server address: ")
 	server, _ := reader.ReadString('\n')
 	server = strings.TrimSuffix(server, "\r\n")
@@ -38,6 +39,7 @@ func main() {
 	phaseMsg := []byte("getcurrenttimerphase\r\n")
 	endTimeMessage := []byte("getfinaltime\r\n")
 	end := "Ended\r\n"
+	running := "Running\r\n"
 
 	for {
 		// Reading for "Ended" event
@@ -45,6 +47,13 @@ func main() {
 		reply := make([]byte, 4096)
 		connection.Read(reply)
 		reply = bytes.Trim(reply, "\x00")
+
+		// Start timer via API
+		if !started && string(reply) == running {
+			_, err := http.Get("http://" + server + "/nodecg-mafiamarathon/startTimer")
+			connectionErr(err)
+			started = true
+		}
 
 		// Send to API on "Ended" event
 		if string(reply) == end {
