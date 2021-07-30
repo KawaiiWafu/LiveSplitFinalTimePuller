@@ -30,6 +30,11 @@ func main() {
 	server, _ := reader.ReadString('\n')
 	server = strings.TrimSuffix(server, "\r\n")
 
+	// Setup start timer key
+	fmt.Print("Start timer key (if you own the marathon): ")
+	key, _ := reader.ReadString('\n')
+	key = strings.TrimSuffix(key, "\r\n")
+
 	// LiveSplit Server connection
 	host := "localhost:16834"
 	connection, err := net.Dial("tcp", host)
@@ -50,7 +55,7 @@ func main() {
 
 		// Start timer via API
 		if !started && string(reply) == running {
-			_, err := http.Get("http://" + server + "/nodecg-mafiamarathon/startTimer")
+			_, err := http.Get("http://" + server + "/nodecg-mafiamarathon/startTimer?key=" + url.QueryEscape(key))
 			connectionErr(err)
 			started = true
 		}
