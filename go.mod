@@ -1,3 +1,3 @@
-module github.com/KawaiiWafu/LiveSplitFinalTimePuller
+module github.com/WafuRuns/LiveSplitFinalTimePuller
 
 go 1.16
